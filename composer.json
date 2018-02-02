@@ -3,6 +3,7 @@
     "description": "Property is a class properties access control DSL for PHP",
     "type": "library",
     "license": "MIT",
+    "keywords": ["property", "attribute", "getter", "setter", "accessor"],
     "authors": [
         {
             "name": "panlatent",
@@ -11,15 +12,21 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.5"
+        "php": ">=5.5",
+        "phpdocumentor/reflection-docblock": "~3.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5",
+        "phpunit/phpunit": "^4.0",
         "php-coveralls/php-coveralls": "^2.0"
     },
     "autoload": {
         "psr-4": {
             "Panlatent\\Property\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Panlatent\\Property\\Tests\\": "tests/"
         }
     },
     "extra": {
