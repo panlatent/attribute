@@ -14,18 +14,16 @@ trait Setter
      */
     public function __set($name, $value)
     {
-        if (! property_exists($this, '_' . $name)) {
-            parent::__set($name, $value);
-            return;
+        if (property_exists($this, '_' . $name)) {
+            $setter = 'set' . $name;
+            if (method_exists($this, $setter)) {
+                $this->$setter($value);
+            } elseif (method_exists($this, 'get' . $name)) {
+                throw new ReadOnlyPropertyException($this, $name, 'Cannot setting read-only property');
+            }
         }
-        $setter = 'set' . $name;
-        if (method_exists($this, $setter)) {
-            $this->$setter($value);
-        } elseif (method_exists($this, 'get' . $name)) {
-            throw new ReadOnlyPropertyException($this, $name, 'Cannot setting read-only property');
-        } else {
-            throw new UndefinedPropertyException($this, $name);
-        }
+
+        throw new UndefinedPropertyException($this, $name);
     }
 
     /**
@@ -33,15 +31,15 @@ trait Setter
      */
     public function __unset($name)
     {
-        if (! property_exists($this, '_' . $name)) {
-            parent::__unset($name);
-            return;
+        if (property_exists($this, '_' . $name)) {
+            $setter = 'set' . $name;
+            if (method_exists($this, $setter)) {
+                $this->$setter(null);
+            } elseif (method_exists($this, 'get' . $name)) {
+                throw new ReadOnlyPropertyException($this, $name, 'Cannot unset read-only property');
+            }
         }
-        $setter = 'set' . $name;
-        if (method_exists($this, $setter)) {
-            $this->$setter(null);
-        } elseif (method_exists($this, 'get' . $name)) {
-            throw new ReadOnlyPropertyException($this, $name, 'Cannot unset read-only property');
-        }
+
+        throw new UndefinedPropertyException($this, $name);
     }
 }
