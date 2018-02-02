@@ -18,6 +18,7 @@ trait Setter
             $setter = 'set' . $name;
             if (method_exists($this, $setter)) {
                 $this->$setter($value);
+                return;
             } elseif (method_exists($this, 'get' . $name)) {
                 throw new ReadOnlyPropertyException($this, $name, 'Cannot setting read-only property');
             }
@@ -35,6 +36,7 @@ trait Setter
             $setter = 'set' . $name;
             if (method_exists($this, $setter)) {
                 $this->$setter(null);
+                return;
             } elseif (method_exists($this, 'get' . $name)) {
                 throw new ReadOnlyPropertyException($this, $name, 'Cannot unset read-only property');
             }
