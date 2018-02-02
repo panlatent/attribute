@@ -19,3 +19,6 @@ after_script:
 
 matrix:
   fast_finish: true
+
+notifications:
+    slack: panlatent:5tZ0QpyXtwYVjjPjHWJYbXvc
