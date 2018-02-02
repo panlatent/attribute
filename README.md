@@ -39,6 +39,7 @@ Usage
 
 这个组件提供了一些 traits 以支持 Getter、Setter 访问器，并且提供了相应的反射类用于代码分析或代码生成。
 
+编写类：
 ```php
 class User
 {
@@ -68,12 +69,18 @@ class User
 }
 ```
 
-```
+使用 Getter、Setter：
+```php
 $user = new User();
 $user->name = 'Job';
 echo $user->name; // print "Job"
 echo $user->status; // print 1 use defualt value in getter
 $user->status = 2;  // error, read-only
+```
+
+使用反射类：
+```php
+$class = new \Panlaten\Property\Reflection\ReflectionClass($user);
 ```
 
 License
