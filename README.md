@@ -9,7 +9,7 @@ Property
 
 Property is a class properties access control DSL for PHP (getter and setter traits).
 
-What's this
+What's This
 ===========
 在面向对象编程（ OOP ）中，Getter 和 Setter 有着很重要的作用，PHP 本身没有直接提供 Getter／Setter 语法。通常，我们使用魔术方法模拟它们，
 例如使用 `__get` 和 `__set` 魔术方法，但是在实现中，由于缺乏语言结构的直接支持，没有一个良好的约束规范 Getter 和 Setter 的使用。
