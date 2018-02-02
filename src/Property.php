@@ -1,6 +1,9 @@
 <?php
 
-namespace Panlatent\Property\Accessor;
+namespace Panlatent\Property;
+
+use Panlatent\Property\Accessor\Getter;
+use Panlatent\Property\Accessor\Setter;
 
 trait Property
 {
