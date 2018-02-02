@@ -11,15 +11,16 @@ Property is a class properties access control DSL for PHP (getter and setter tra
 
 What's This
 ===========
-在面向对象编程（ OOP ）中，Getter 和 Setter 有着很重要的作用，PHP 本身没有直接提供 Getter／Setter 语法。通常，我们使用魔术方法模拟它们，
-例如使用 `__get` 和 `__set` 魔术方法，但是在实现中，由于缺乏语言结构的直接支持，没有一个良好的约束规范 Getter 和 Setter 的使用。
+在面向对象编程（ OOP ）中，Getter 和 Setter 有着很重要的作用，PHP 本身没有直接提供 Getter／Setter 语法。
+通常，我们使用魔术方法模拟它们，例如使用 `__get` 和 `__set` 魔术方法，但是在实现中，由于缺乏语言结构的直接支持，
+没有一个良好的约束规范 Getter 和 Setter 的使用。
 
 这个组件试图规范化 Getter 和 Setter 的定义以及使用方式，旨在提供清晰程序逻辑和优雅的编程体验。
 
 在这里，Getter、Setter 被严格定义：
 
-> 必须具有一个以下划线开头的私有成员变量和以这个变量为核心的一个公开的非静态方法， 
-三者的名称除了前缀 `_`, `get`, `set` 之外必须完全一致（ 不区分大小写 ）。这样的一组类内的小结构，被称为 `Aeccessor（访问器 ）`。
+> **必须** 具有一个**以下划线开头**的**私有**成员变量和以这个变量为核心的一个**公开的非静态方法**， 
+三者的**名称**除了前缀 `_`, `get`, `set` 之外**必须**完全一致（ 不区分大小写 ）。这样的一组类内的小结构，被称为 `Aeccessor（ 访问器 ）`。
     
  > (!) Notice: 不区分大小写是由于 PHP 不区分方法大小写造成的。
 
