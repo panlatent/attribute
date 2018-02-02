@@ -14,6 +14,10 @@ trait Setter
      */
     public function __set($name, $value)
     {
+        if (! property_exists($this, '_' . $name)) {
+            parent::__set($name, $value);
+            return;
+        }
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter($value);
@@ -29,6 +33,10 @@ trait Setter
      */
     public function __unset($name)
     {
+        if (! property_exists($this, '_' . $name)) {
+            parent::__unset($name);
+            return;
+        }
         $setter = 'set' . $name;
         if (method_exists($this, $setter)) {
             $this->$setter(null);

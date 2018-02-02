@@ -13,12 +13,12 @@ class ReflectionClass extends \ReflectionClass
      */
     public function hasProperty($name)
     {
-        return parent::hasProperty($name) || $this->hasAccessorProperty($name);
+        return parent::hasProperty($name) || $this->hasAccessor($name);
     }
 
     /**
      * @param string $name
-     * @return ReflectionAccessorProperty|ReflectionProperty
+     * @return ReflectionProperty
      */
     public function getProperty($name)
     {
@@ -26,7 +26,7 @@ class ReflectionClass extends \ReflectionClass
             return parent::getProperty($name);
         }
 
-        return $this->getAccessorProperty($name);
+        return $this->getAccessor($name)->getProperty();
     }
 
     /**
@@ -51,54 +51,70 @@ class ReflectionClass extends \ReflectionClass
      * @param string $name
      * @return bool
      */
-    public function hasAccessorProperty($name)
+    public function hasAccessor($name)
     {
-        if (parent::hasMethod('get' . $name)) {
-            return true;
-        } elseif (parent::hasMethod('set' . $name)) {
-            return true;
+        if (! parent::hasProperty('_' . $name)) {
+            return false;
         }
-        return false;
+        $property = parent::getProperty('_' . $name);
+
+        return $this->isAccessorProperty($property);
     }
 
     /**
      * @param string $name
-     * @return ReflectionAccessorProperty
+     * @return ReflectionAccessor
      */
-    public function getAccessorProperty($name)
+    public function getAccessor($name)
     {
-        return new ReflectionAccessorProperty($this, $name);
+        return new ReflectionAccessor($this, $name);
     }
 
     /**
-     * @return ReflectionAccessorProperty[]
+     * @return ReflectionAccessor[]
      */
-    public function getAccessorProperties()
+    public function getAccessors()
     {
-        $properties = [];
-        foreach (parent::getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($this->isAccessorMethod($method)) {
-                $name  = lcfirst(substr($method->getName(), 3));
-                if (! isset($properties[$name])) {
-                    $properties[$name] = new ReflectionAccessorProperty($this, $name);
-                }
+        $accessor = [];
+        foreach (parent::getProperties(ReflectionMethod::IS_PRIVATE) as $property) {
+            if ($this->isAccessorProperty($property)) {
+                $name = substr($property->getName(), 1);
+                $properties[$name] = new ReflectionAccessor($this, $name);
             }
         }
 
-        return array_values($properties);
+        return $accessor;
     }
 
-    public function getAccessorDocComment()
+    /**
+     * @return ReflectionProperty[]
+     */
+    public function getAccessorProperties()
     {
-        $lines = [];
-        foreach ($this->getAccessorProperties() as $property) {
-            $docComment = ' * @property ' . implode('|', $property->getTypes());
-            if ($this->hasProperty('_' . $property->getName())) {
-                $docComment .= ' ' . $property->description;
-            }
-            $docComment .= "\n"
+        $properties = parent::getProperties(ReflectionProperty::IS_PRIVATE);
+        $properties = array_filter($properties, function(ReflectionProperty $property) {
+            return $this->isAccessorProperty($property);
+        });
 
-            $lines[] = $property->getDocComment();
+        return $properties;
+    }
+
+    /**
+     * @param ReflectionProperty $property
+     * @return bool
+     */
+    protected function isAccessorProperty($property)
+    {
+        if (! $property->isPrivate() || $property->getName()[0] != '_') {
+            return false;
+        }
+        $name = substr($property->getName(), 1);
+        if ($this->hasMethod('get' . $name)) {
+            return true;
+        } elseif ($this->hasMethod('set' . $name)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -106,14 +122,16 @@ class ReflectionClass extends \ReflectionClass
      * @param ReflectionMethod $method
      * @return bool
      */
-    private function isAccessorMethod(ReflectionMethod $method)
+    protected function isAccessorMethod(ReflectionMethod $method)
     {
         if (strlen($method->getName()) <= 3) {
             return false;
-        } elseif (strncmp($method->getName(), 'get', 3) == 0) {
-            return true;
-        } elseif (strncmp($method->getName(), 'set', 3) == 0) {
-            return true;
+        } elseif (strncmp($method->getName(), 'get', 3) == 0 ||
+            strncmp($method->getName(), 'set', 3) == 0) {
+            $name = '_' . substr($method->getName(), 3);
+            if (parent::hasProperty($name) && parent::getProperty($name)->isPrivate()) {
+                return true;
+            }
         }
         return false;
     }

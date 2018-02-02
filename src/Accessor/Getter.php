@@ -14,6 +14,9 @@ trait Getter
      */
     public function __get($name)
     {
+        if (! property_exists($this, '_' . $name)) {
+           return parent::__get($name);
+        }
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter();
@@ -29,6 +32,9 @@ trait Getter
      */
     public function __isset($name)
     {
+        if (! property_exists($this, '_' . $name)) {
+            return parent::__isset($name);
+        }
         $getter = 'get' . $name;
         if (method_exists($this, $getter)) {
             return $this->$getter() !== null;

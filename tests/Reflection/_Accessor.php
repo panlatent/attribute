@@ -6,7 +6,7 @@ namespace Panlatent\Property\Tests\Reflection;
 use Panlatent\Property\Accessor\Getter;
 use Panlatent\Property\Accessor\Setter;
 
-class _Property
+class _Accessor
 {
     use Getter, Setter;
 
@@ -33,13 +33,17 @@ class _Property
         $this->_name = $name;
     }
 
+    private $_age;
+
     public function getAge()
     {
-
+        return $this->_age;
     }
 
-    public function setNumber()
-    {
+    private $_number;
 
+    public function setNumber($number)
+    {
+        $this->_number = $number;
     }
 }
