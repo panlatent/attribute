@@ -9,6 +9,25 @@ trait Setter
 {
     /**
      * @param string $name
+     * @return bool
+     */
+    public function __isset($name)
+    {
+        if (property_exists($this, '_' . $name)) {
+            $getter = 'get' . $name;
+            if (method_exists($this, $getter)) {
+                return $this->$getter() !== null;
+            }
+        }
+        if (! method_exists(get_parent_class(), '__isset')) {
+            return false;
+        }
+
+        return parent::__isset($name);
+    }
+
+    /**
+     * @param string $name
      * @param mixed  $value
      * @throws UndefinedPropertyException
      */
@@ -23,8 +42,11 @@ trait Setter
                 throw new ReadOnlyPropertyException($this, $name, 'Cannot setting read-only property');
             }
         }
+        if (! method_exists(get_parent_class(), '__set')) {
+            throw new UndefinedPropertyException($this, $name);
+        }
 
-        throw new UndefinedPropertyException($this, $name);
+        parent::__set($name, $value);
     }
 
     /**
@@ -41,7 +63,10 @@ trait Setter
                 throw new ReadOnlyPropertyException($this, $name, 'Cannot unset read-only property');
             }
         }
+        if (! method_exists(get_parent_class(), '__unset')) {
+            throw new UndefinedPropertyException($this, $name);
+        }
 
-        throw new UndefinedPropertyException($this, $name);
+        parent::__unset($name);
     }
 }

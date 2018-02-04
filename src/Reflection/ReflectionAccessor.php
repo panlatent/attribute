@@ -13,7 +13,6 @@ use Reflection;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
-use ReflectionProperty;
 
 class ReflectionAccessor extends Reflection
 {
@@ -26,7 +25,7 @@ class ReflectionAccessor extends Reflection
      */
     protected $name;
     /**
-     * @var ReflectionProperty
+     * @var ReflectionAccessorProperty
      */
     protected $property;
     /**
@@ -109,7 +108,7 @@ class ReflectionAccessor extends Reflection
     }
 
     /**
-     * @return ReflectionProperty
+     * @return ReflectionAccessorProperty
      */
     public function getProperty()
     {

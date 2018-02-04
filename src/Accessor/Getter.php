@@ -22,23 +22,10 @@ trait Getter
                 throw new WriteOnlyPropertyException($this, $name, 'Cannot getting write-only protected property');
             }
         }
-
-        throw new UndefinedPropertyException($this, $name);
-    }
-
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function __isset($name)
-    {
-        if (property_exists($this, '_' . $name)) {
-            $getter = 'get' . $name;
-            if (method_exists($this, $getter)) {
-                return $this->$getter() !== null;
-            }
+        if (! method_exists(get_parent_class(), '__get')) {
+            throw new UndefinedPropertyException($this, $name);
         }
 
-        return false;
+        return parent::__get($name);
     }
 }

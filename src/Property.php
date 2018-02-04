@@ -2,12 +2,9 @@
 
 namespace Panlatent\Property;
 
-use Panlatent\Property\Accessor\Getter;
-use Panlatent\Property\Accessor\Setter;
-
 trait Property
 {
-    use Getter, Setter;
+    use Accessor;
 
     public function hasProperty($name)
     {
